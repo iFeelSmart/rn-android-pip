@@ -42,6 +42,8 @@ public class RNAndroidPipModule extends ReactContextBaseJavaModule implements Li
         return "RNAndroidPip";
     }
 
+
+    /// Pip methods
     @ReactMethod
     public void enterPictureInPictureMode() {
         if (isPipSupported) {
@@ -69,6 +71,7 @@ public class RNAndroidPipModule extends ReactContextBaseJavaModule implements Li
         isPipListenerEnabled = false;
     }
 
+    /// Lifecycle
     @Override
     public void onHostResume() {
     }
