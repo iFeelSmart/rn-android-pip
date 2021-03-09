@@ -7,9 +7,11 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.LifecycleEventListener;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import android.app.PictureInPictureParams;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.util.Rational;
 
@@ -22,9 +24,13 @@ public class RNAndroidPipModule extends ReactContextBaseJavaModule implements Li
     private boolean isCustomAspectRatioSupported = false;
     private boolean isPipListenerEnabled = false;
     private Rational aspectRatio;
+    private static RNAndroidPipModule instance;
+    private DeviceEventManagerModule.RCTDeviceEventEmitter mJSModule = null;
+    private boolean isInPictureInPictureMode = false;
 
     public RNAndroidPipModule(ReactApplicationContext reactContext) {
         super(reactContext);
+        instance = this;
         this.reactContext = reactContext;
         reactContext.addLifecycleEventListener(this);
         PackageManager pm = reactContext.getPackageManager();
@@ -42,6 +48,22 @@ public class RNAndroidPipModule extends ReactContextBaseJavaModule implements Li
         return "RNAndroidPip";
     }
 
+
+    /// Pip event handling
+    public static void onHostPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig){
+        if (instance != null){
+            instance.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
+        }
+    }
+    void onPictureInPictureModeChanged(boolean _isInPictureInPictureMode, Configuration newConfig) {
+        if (mJSModule == null) {
+            mJSModule = reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class);
+        }
+        if (isInPictureInPictureMode != _isInPictureInPictureMode) {
+            isInPictureInPictureMode = _isInPictureInPictureMode;
+            mJSModule.emit("onPipModeChanged", isInPictureInPictureMode);
+        }
+    }
 
     /// Pip methods
     @ReactMethod

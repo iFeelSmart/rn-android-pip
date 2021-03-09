@@ -1,6 +1,7 @@
+import { NativeModules } from 'react-native'
+import PipEventManager from './PipEventManager'
 
-import { NativeModules } from 'react-native';
+const { RNAndroidPip } = NativeModules
 
-const { RNAndroidPip } = NativeModules;
-
-export default RNAndroidPip;
+export default RNAndroidPip
+export { PipEventManager }

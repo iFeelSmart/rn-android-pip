@@ -45,8 +45,19 @@ react-native link react-native-android-pip
 ## Usage
 For android sdk version 23 and below, this method call will be ignored as PIP support is not available
 
+First add Following line in you MainActivity.java file.
+
+```java
+import com.reactpiplibrary.RNAndroidPipModule;
+
+@Override
+public void onPictureInPictureModeChanged (boolean isInPictureInPictureMode, Configuration newConfig) {
+   RNAndroidPipModule.onHostPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
+}
+```
+
 ```javascript
-import AndroidPip from 'react-native-android-pip';
+import AndroidPip, { PipEventManager } from 'react-native-android-pip';
 
 
 // Enter Pip mode
@@ -60,5 +71,10 @@ AndroidPip.configureAspectRatio(width, height)
 AndroidPip.enableAutoPipSwitch()
 AndroidPip.disableAutoPipSwitch()
 
+// register pip mode change callback
+this.pipEventManager = new PipEventManager()
+this.pipEventManager.addListerner((isPip) => {
+    console.log('isPip ' + isPip)
+})
+
 ```
-  
